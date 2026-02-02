@@ -1,0 +1,30 @@
+# Fee Configuration
+# Fees are charged per contract
+
+fees:
+  options:
+    exchange_fee: 0.25      # Per contract
+    clearing_fee: 0.03      # Per contract
+    regulatory_fee: 0.02    # Per contract
+  futures:
+    exchange_fee: 1.50      # Per contract
+    clearing_fee: 0.10      # Per contract
+    regulatory_fee: 0.01    # Per contract
+
+# S3 Configuration
+s3:
+  bucket: laniakea-trading
+  prefix: exegy-trade-lists/
+
+# Webhook Configuration
+webhook:
+  url: "https://hooks.example.com/your-webhook-endpoint"
+  # Optional: Add custom headers if needed
+  # headers:
+  #   Authorization: "Bearer your-token"
+
+# Schedule (for reference - actual scheduling done via cron/systemd)
+# Runs at end of each trading day
+schedule:
+  timezone: America/New_York
+  time: "17:30"  # After market close
