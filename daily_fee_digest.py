@@ -8,15 +8,19 @@ and sends a webhook notification with the summary.
 
 import argparse
 import json
+import logging
 import sys
+import traceback
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
 import boto3
 import requests
 import yaml
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 @dataclass
@@ -146,66 +150,81 @@ def format_currency(amount: float) -> str:
     return f"${amount:,.2f}"
 
 
-def build_webhook_payload(
+def build_fee_message(
     date: datetime,
     options_summary: TradeSummary,
     futures_summary: TradeSummary,
     options_config: FeeConfig,
     futures_config: FeeConfig,
-) -> dict:
-    """Build the webhook payload with fee summary."""
+) -> tuple[str, dict]:
+    """Build the fee summary message and data."""
     total_fees = options_summary.total_fees + futures_summary.total_fees
     total_trades = options_summary.trade_count + futures_summary.trade_count
     total_contracts = options_summary.total_contracts + futures_summary.total_contracts
     
-    return {
-        "date": date.strftime("%Y-%m-%d"),
-        "summary": {
-            "total_fees": total_fees,
-            "total_fees_formatted": format_currency(total_fees),
-            "total_trades": total_trades,
-            "total_contracts": total_contracts,
-        },
-        "options": {
-            "trade_count": options_summary.trade_count,
-            "total_contracts": options_summary.total_contracts,
-            "total_fees": options_summary.total_fees,
-            "total_fees_formatted": format_currency(options_summary.total_fees),
-            "fee_per_contract": options_config.total_per_contract,
-        },
-        "futures": {
-            "trade_count": futures_summary.trade_count,
-            "total_contracts": futures_summary.total_contracts,
-            "total_fees": futures_summary.total_fees,
-            "total_fees_formatted": format_currency(futures_summary.total_fees),
-            "fee_per_contract": futures_config.total_per_contract,
-        },
-        "generated_at": datetime.utcnow().isoformat() + "Z",
+    message_lines = [
+        f"**Total Fees: {format_currency(total_fees)}**",
+        "",
+        f"📊 **Options**",
+        f"  • Trades: {options_summary.trade_count:,}",
+        f"  • Contracts: {options_summary.total_contracts:,}",
+        f"  • Fees: {format_currency(options_summary.total_fees)} @ {format_currency(options_config.total_per_contract)}/contract",
+        "",
+        f"📈 **Futures**",
+        f"  • Trades: {futures_summary.trade_count:,}",
+        f"  • Contracts: {futures_summary.total_contracts:,}",
+        f"  • Fees: {format_currency(futures_summary.total_fees)} @ {format_currency(futures_config.total_per_contract)}/contract",
+        "",
+        f"**Totals:** {total_trades:,} trades, {total_contracts:,} contracts",
+    ]
+    
+    summary_data = {
+        "total_fees": total_fees,
+        "total_fees_formatted": format_currency(total_fees),
+        "total_trades": total_trades,
+        "total_contracts": total_contracts,
+    }
+    
+    return "\n".join(message_lines), summary_data
+
+
+def send_teams_message(
+    webhook_url: str,
+    message: str,
+    title_suffix: str = "",
+) -> bool:
+    """Send an Adaptive Card message to Microsoft Teams."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    title = f"Daily Fee Digest {today}"
+    if title_suffix:
+        title += f" ({title_suffix})"
+
+    payload = {
+        "type": "message",
+        "attachments": [{
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "contentUrl": None,
+            "content": {
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "type": "AdaptiveCard",
+                "version": "1.4",
+                "body": [
+                    {"type": "TextBlock", "size": "Large", "weight": "Bolder", "text": title},
+                    {"type": "TextBlock", "text": message, "wrap": True},
+                    {"type": "TextBlock", "text": f"Timestamp (UTC): {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}", "isSubtle": True, "spacing": "Small"}
+                ]
+            }
+        }]
     }
 
-
-def send_webhook(
-    url: str,
-    payload: dict,
-    headers: Optional[dict] = None,
-) -> bool:
-    """Send webhook notification with the fee summary."""
-    default_headers = {"Content-Type": "application/json"}
-    if headers:
-        default_headers.update(headers)
-    
     try:
-        response = requests.post(
-            url,
-            json=payload,
-            headers=default_headers,
-            timeout=30,
-        )
-        response.raise_for_status()
-        print(f"Webhook sent successfully. Status: {response.status_code}")
+        r = requests.post(webhook_url, json=payload, timeout=10)
+        r.raise_for_status()
+        logging.info("Adaptive Card successfully sent to Teams: %s", title)
         return True
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to send webhook: {e}")
+    except Exception as e:
+        logging.error("Failed to send Teams Adaptive Card: %s", e)
+        logging.debug(traceback.format_exc())
         return False
 
 
@@ -273,8 +292,8 @@ def main():
         trades, options_config, futures_config
     )
 
-    # Build webhook payload
-    payload = build_webhook_payload(
+    # Build fee message
+    message, summary_data = build_fee_message(
         process_date,
         options_summary,
         futures_summary,
@@ -290,24 +309,23 @@ def main():
     print(f"Futures: {futures_summary.trade_count} trades, "
           f"{futures_summary.total_contracts} contracts, "
           f"{format_currency(futures_summary.total_fees)} fees")
-    print(f"Total Fees: {payload['summary']['total_fees_formatted']}")
+    print(f"Total Fees: {summary_data['total_fees_formatted']}")
     print("-------------------\n")
 
     if args.dry_run:
-        print("Dry run - webhook payload:")
-        print(json.dumps(payload, indent=2))
+        print("Dry run - Teams message:")
+        print(message)
         return
 
-    # Send webhook
+    # Send Teams webhook
     webhook_config = config.get("webhook", {})
     webhook_url = webhook_config.get("url")
-    webhook_headers = webhook_config.get("headers")
 
     if not webhook_url:
         print("Error: No webhook URL configured")
         sys.exit(1)
 
-    success = send_webhook(webhook_url, payload, webhook_headers)
+    success = send_teams_message(webhook_url, message)
     sys.exit(0 if success else 1)
 
 

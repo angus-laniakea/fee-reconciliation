@@ -3,13 +3,13 @@
 
 fees:
   options:
-    exchange_fee: 0.25      # Per contract
-    clearing_fee: 0.03      # Per contract
+    exchange_fee: 0.55      # Per contract
+    clearing_fee: 0.25      # Per contract
     regulatory_fee: 0.02    # Per contract
   futures:
-    exchange_fee: 1.50      # Per contract
-    clearing_fee: 0.10      # Per contract
-    regulatory_fee: 0.01    # Per contract
+    exchange_fee: 1.38      # Per contract
+    clearing_fee: 0.25      # Per contract
+    regulatory_fee: 0.02    # Per contract
 
 # S3 Configuration
 s3:
@@ -18,7 +18,7 @@ s3:
 
 # Webhook Configuration
 webhook:
-  url: "https://hooks.example.com/your-webhook-endpoint"
+  url: "https://defaultd6cfaa7b6d7242d1a4d0c0c4915e30.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/db2b181bce5f42cb93a39caa68e14c21/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Je-AEE2OYZM7bLb6BbuQgsD-05gnJvnv3BtOgIsK3f0"
   # Optional: Add custom headers if needed
   # headers:
   #   Authorization: "Bearer your-token"
