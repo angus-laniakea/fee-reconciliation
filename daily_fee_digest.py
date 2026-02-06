@@ -44,7 +44,7 @@ class TradeSummary:
     total_fees: float
 
 
-def load_config(config_path: str = "config.yaml") -> dict:
+def load_config(config_path: str = "/home/ec2-user/fees/config.yaml") -> dict:
     """Load configuration from YAML file."""
     path = Path(config_path)
     if not path.exists():
