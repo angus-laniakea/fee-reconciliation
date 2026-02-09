@@ -234,8 +234,8 @@ def main():
     )
     parser.add_argument(
         "--config",
-        default="config.yaml",
-        help="Path to configuration file (default: config.yaml)",
+        default="/home/ec2-user/fees/config.yaml",
+        help="Path to configuration file (default: /home/ec2-user/fees/config.yaml)",
     )
     parser.add_argument(
         "--date",
