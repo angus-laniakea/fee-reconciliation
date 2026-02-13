@@ -12,7 +12,7 @@ import logging
 import sys
 import traceback
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -114,6 +114,36 @@ def parse_trades(csv_content: str) -> list[dict]:
         trades.append(trade)
     
     return trades
+
+
+def filter_trades_by_session(trades: list[dict], process_date: datetime) -> list[dict]:
+    """
+    Filter trades to only include those from the last trading session.
+    
+    Trading session starts at 5pm the previous calendar day.
+    For example, if process_date is 2024-01-15, we include trades
+    from 2024-01-14 17:00:00 onwards.
+    """
+    # Session starts at 5pm the previous day
+    session_start = process_date.replace(hour=17, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    
+    filtered_trades = []
+    for trade in trades:
+        timestamp_str = trade.get("trade_datetime", "")
+        if not timestamp_str:
+            continue
+        
+        try:
+            # Parse format: MM/DD/YYYY-HH:MM:SS (e.g., '02/12/2026-03:10:20')
+            trade_time = datetime.strptime(timestamp_str, "%m/%d/%Y-%H:%M:%S")
+            
+            if trade_time >= session_start:
+                filtered_trades.append(trade)
+        except Exception as e:
+            logging.warning(f"Error parsing trade timestamp '{timestamp_str}': {e}")
+            continue
+    
+    return filtered_trades
 
 
 def calculate_fees(
@@ -284,8 +314,12 @@ def main():
         print("No trade file found for this date. Exiting.")
         sys.exit(1)
 
-    trades = parse_trades(csv_content)
-    print(f"Parsed {len(trades)} trades")
+    all_trades = parse_trades(csv_content)
+    print(f"Parsed {len(all_trades)} trades from file")
+    
+    # Filter to only include trades from the last trading session (since 5pm previous day)
+    trades = filter_trades_by_session(all_trades, process_date)
+    print(f"Filtered to {len(trades)} trades from last trading session (since 5pm previous day)")
 
     # Calculate fees
     options_summary, futures_summary = calculate_fees(

@@ -1,3 +1,59 @@
 Error: Config file not found: config.yaml
 Error: Config file not found: config.yaml
 Error: Config file not found: config.yaml
+2026-02-09 22:05:02,023 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-09 22:05:02,829 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-09
+Processing trades for: 2026-02-09
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260209.csv
+Parsed 116 trades
+
+--- Fee Summary ---
+Options: 112 trades, 1456 contracts, $1,193.92 fees
+Futures: 4 trades, 21 contracts, $34.65 fees
+Total Fees: $1,228.57
+-------------------
+
+2026-02-10 22:05:01,741 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-10 22:05:02,326 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-10
+Processing trades for: 2026-02-10
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260210.csv
+Parsed 188 trades
+
+--- Fee Summary ---
+Options: 181 trades, 3428 contracts, $2,810.96 fees
+Futures: 7 trades, 25 contracts, $41.25 fees
+Total Fees: $2,852.21
+-------------------
+
+2026-02-11 22:05:02,039 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-11 22:05:02,800 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-11
+Processing trades for: 2026-02-11
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260211.csv
+Parsed 93 trades
+
+--- Fee Summary ---
+Options: 92 trades, 813 contracts, $666.66 fees
+Futures: 1 trades, 5 contracts, $8.25 fees
+Total Fees: $674.91
+-------------------
+
+2026-02-12 22:05:02,219 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-12 22:05:02,882 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-12
+Processing trades for: 2026-02-12
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260212.csv
+Parsed 249 trades
+
+--- Fee Summary ---
+Options: 232 trades, 4904 contracts, $4,021.28 fees
+Futures: 17 trades, 82 contracts, $135.30 fees
+Total Fees: $4,156.58
+-------------------
+
