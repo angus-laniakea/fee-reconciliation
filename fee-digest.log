@@ -57,3 +57,93 @@ Futures: 17 trades, 82 contracts, $135.30 fees
 Total Fees: $4,156.58
 -------------------
 
+2026-02-13 22:05:01,600 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-13 22:05:02,327 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-13
+Processing trades for: 2026-02-13
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260213.csv
+Parsed 633 trades from file
+Filtered to 633 trades from last trading session (since 5pm previous day)
+
+--- Fee Summary ---
+Options: 625 trades, 9955 contracts, $8,163.10 fees
+Futures: 8 trades, 57 contracts, $94.05 fees
+Total Fees: $8,257.15
+-------------------
+
+2026-02-16 22:05:01,589 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-16 22:05:02,325 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-16
+Processing trades for: 2026-02-16
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260216.csv
+Parsed 101 trades from file
+Filtered to 101 trades from last trading session (since 5pm previous day)
+
+--- Fee Summary ---
+Options: 96 trades, 1333 contracts, $1,093.06 fees
+Futures: 5 trades, 5 contracts, $8.25 fees
+Total Fees: $1,101.31
+-------------------
+
+2026-02-17 22:05:01,549 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-17 22:05:02,157 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-17
+Processing trades for: 2026-02-17
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260217.csv
+Parsed 319 trades from file
+Filtered to 218 trades from last trading session (since 5pm previous day)
+
+--- Fee Summary ---
+Options: 214 trades, 3628 contracts, $2,974.96 fees
+Futures: 4 trades, 40 contracts, $66.00 fees
+Total Fees: $3,040.96
+-------------------
+
+2026-02-18 22:05:02,210 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-18 22:05:02,711 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-18
+Processing trades for: 2026-02-18
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260218.csv
+Parsed 57 trades from file
+Filtered to 57 trades from last trading session (since 5pm previous day)
+
+--- Fee Summary ---
+Options: 54 trades, 838 contracts, $687.16 fees
+Futures: 3 trades, 11 contracts, $18.15 fees
+Total Fees: $705.31
+-------------------
+
+2026-02-19 22:05:01,919 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-19 22:05:02,704 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-19
+Processing trades for: 2026-02-19
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260219.csv
+Parsed 134 trades from file
+Filtered to 134 trades from last trading session (since 5pm previous day)
+
+--- Fee Summary ---
+Options: 130 trades, 1718 contracts, $1,408.76 fees
+Futures: 4 trades, 72 contracts, $118.80 fees
+Total Fees: $1,527.56
+-------------------
+
+2026-02-20 22:05:02,310 - INFO - Found credentials from IAM Role: trading-s3
+2026-02-20 22:05:02,941 - INFO - Adaptive Card successfully sent to Teams: Daily Fee Digest 2026-02-20
+Processing trades for: 2026-02-20
+Options fee per contract: $0.82
+Futures fee per contract: $1.65
+Fetching: s3://laniakea-trading/exegy-trade-lists/trades_20260220.csv
+Parsed 525 trades from file
+Filtered to 525 trades from last trading session (since 5pm previous day)
+
+--- Fee Summary ---
+Options: 523 trades, 11543 contracts, $9,465.26 fees
+Futures: 2 trades, 110 contracts, $181.50 fees
+Total Fees: $9,646.76
+-------------------
+

@@ -129,6 +129,10 @@ def filter_trades_by_session(trades: list[dict], process_date: datetime) -> list
     
     filtered_trades = []
     for trade in trades:
+        # Skip expiration trades
+        if trade.get("trade_source", "").upper() == "EXPIRATION":
+            continue
+        
         timestamp_str = trade.get("trade_datetime", "")
         if not timestamp_str:
             continue
